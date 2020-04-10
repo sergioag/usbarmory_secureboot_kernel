@@ -36,8 +36,8 @@ Additional parameters include:
 - BOOT: eMMC or uSD. Defaults to eMMC. This is the default boot device for u-Boot.
 - IMX: imx6ull or imx6ul. Defaults to imx6ull and only tested on this one, since I don't have the other. Should work though.
 
-After the build finishes you will have a DEB package in this directory, named something like `linux-image-4.19-usbarmory-mark-two_4.19.95-1_armhf.deb`. To install it, in your USBArmory, run:
+After the build finishes you will have a DEB package in this directory, named something like `linux-image-4.19-usbarmory-mark-two_5.4.25-0_armhf.deb`. To install it, in your USBArmory, run:
 ```
-dpkg --install linux-image-4.19-usbarmory-mark-two_4.19.95-1_armhf.deb
+dpkg --install linux-image-4.19-usbarmory-mark-two_5.4.25-0_armhf.deb
 ```
 And then reboot. If everything goes ok, it should boot properly.

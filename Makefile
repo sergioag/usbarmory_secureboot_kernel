@@ -1,6 +1,6 @@
 
 JOBS=2
-LINUX_VER=4.19.109
+LINUX_VER=5.4.31
 LINUX_VER_MAJOR=${shell echo ${LINUX_VER} | cut -d '.' -f1,2}
 KBUILD_BUILD_USER=usbarmory
 KBUILD_BUILD_HOST=f-secure-foundry
@@ -34,10 +34,10 @@ linux-${LINUX_VER}.tar.xz:
 	wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-${LINUX_VER}.tar.xz -O linux-${LINUX_VER}.tar.xz
 	wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-${LINUX_VER}.tar.sign -O linux-${LINUX_VER}.tar.sign
 
-mxs-dcp-longterm.zip: check_version
+mxs-dcp-master.zip: check_version
 	@if test "${IMX}" = "imx6ull"; then \
-		wget ${MXS_DCP_REPO}/archive/longterm.zip -O mxs-dcp-longterm.zip && \
-		unzip -o mxs-dcp-longterm; \
+		wget ${MXS_DCP_REPO}/archive/master.zip -O mxs-dcp-master.zip && \
+		unzip -o mxs-dcp-master; \
 	fi
 
 caam-keyblob-master.zip: check_version
@@ -46,9 +46,9 @@ caam-keyblob-master.zip: check_version
 		unzip -o caam-keyblob-master; \
 	fi
 
-mxs-dcp: mxs-dcp-longterm.zip linux-${LINUX_VER}/arch/arm/boot/zImage
+mxs-dcp: mxs-dcp-master.zip linux-${LINUX_VER}/arch/arm/boot/zImage
 	@if test "${IMX}" = "imx6ull"; then \
-		cd mxs-dcp-longterm && make KBUILD_BUILD_USER=${KBUILD_BUILD_USER} KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST} ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- KERNEL_SRC=../linux-${LINUX_VER} -j${JOBS} all; \
+		cd mxs-dcp-master && make KBUILD_BUILD_USER=${KBUILD_BUILD_USER} KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST} ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- KERNEL_SRC=../linux-${LINUX_VER} -j${JOBS} all; \
 	fi
 
 caam-keyblob: caam-keyblob-master.zip linux-${LINUX_VER}/arch/arm/boot/zImage
