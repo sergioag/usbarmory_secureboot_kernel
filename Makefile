@@ -14,14 +14,14 @@ CAAM_KEYBLOB_REPO=https://github.com/f-secure-foundry/caam-keyblob
 .DEFAULT_GOAL := all
 .PHONY: check_version mxs-dcp caam-keyblob all clean
 BOOT ?= eMMC
-IMX ?= imx6ull
+IMX ?= imx6ulz
 
 check_version:
 	@if test "${BOOT}" != "uSD" && test "${BOOT}" != eMMC; then \
 		echo "invalid target, mark-two BOOT options are: uSD, eMMC"; \
 		exit 1; \
-	elif test "${IMX}" != "imx6ul" && test "${IMX}" != "imx6ull"; then \
-		echo "invalid target, mark-two IMX options are: imx6ul, imx6ull"; \
+	elif test "${IMX}" != "imx6ul" && test "${IMX}" != "imx6ulz"; then \
+		echo "invalid target, mark-two IMX options are: imx6ul, imx6ulz"; \
 		exit 1; \
 	fi
 	@echo "target: USB armory Trusted Boot, IMX=${IMX} BOOT=${BOOT}"
@@ -35,7 +35,7 @@ linux-${LINUX_VER}.tar.xz:
 	wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${LINUX_VER}.tar.sign -O linux-${LINUX_VER}.tar.sign
 
 mxs-dcp-master.zip: check_version
-	@if test "${IMX}" = "imx6ull"; then \
+	@if test "${IMX}" = "imx6ulz"; then \
 		wget ${MXS_DCP_REPO}/archive/master.zip -O mxs-dcp-master.zip && \
 		unzip -o mxs-dcp-master; \
 	fi
@@ -47,7 +47,7 @@ caam-keyblob-master.zip: check_version
 	fi
 
 mxs-dcp: mxs-dcp-master.zip linux-${LINUX_VER}/arch/arm/boot/zImage
-	@if test "${IMX}" = "imx6ull"; then \
+	@if test "${IMX}" = "imx6ulz"; then \
 		cd mxs-dcp-master && make KBUILD_BUILD_USER=${KBUILD_BUILD_USER} KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST} ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- KERNEL_SRC=../linux-${LINUX_VER} -j${JOBS} all; \
 	fi
 
@@ -128,14 +128,15 @@ linux-image-${LINUX_VER_MAJOR}-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_ar
 	cp -r linux-${LINUX_VER}/System.map linux-image-${LINUX_VER_MAJOR}-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/boot/System.map-${LINUX_VER}${LOCALVERSION}-usbarmory
 	cd linux-${LINUX_VER} && make INSTALL_MOD_PATH=../linux-image-${LINUX_VER_MAJOR}-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf ARCH=arm modules_install
 	cp -r linux-${LINUX_VER}/arch/arm/boot/dts/${IMX}-usbarmory.dtb linux-image-${LINUX_VER_MAJOR}-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/boot/${IMX}-usbarmory-default-${LINUX_VER}${LOCALVERSION}.dtb
-	@if test "${IMX}" = "imx6ull"; then \
-		cd mxs-dcp-longterm && make INSTALL_MOD_PATH=../linux-image-${LINUX_VER_MAJOR}-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf ARCH=arm KERNEL_SRC=../linux-${LINUX_VER} modules_install; \
+	@if test "${IMX}" = "imx6ulz"; then \
+		cd mxs-dcp-master && make INSTALL_MOD_PATH=../linux-image-${LINUX_VER_MAJOR}-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf ARCH=arm KERNEL_SRC=../linux-${LINUX_VER} modules_install; \
 	fi
 	@if test "${IMX}" = "imx6ul"; then \
 		cd caam-keyblob-master && make INSTALL_MOD_PATH=../linux-image-${LINUX_VER_MAJOR}-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf ARCH=arm KERNEL_SRC=../linux-${LINUX_VER} modules_install; \
 	fi
 	cd linux-image-${LINUX_VER_MAJOR}-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/boot ; ln -sf usbarmory-${LINUX_VER}${LOCALVERSION}.itb usbarmory.itb
 	cd linux-image-${LINUX_VER_MAJOR}-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/boot ; ln -sf ${IMX}-usbarmory-default-${LINUX_VER}${LOCALVERSION}.dtb ${IMX}-usbarmory.dtb
+	cd linux-image-${LINUX_VER_MAJOR}-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/boot ; ln -sf ${IMX}-usbarmory.dtb imx6ull-usbarmory.dtb
 	rm linux-image-${LINUX_VER_MAJOR}-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/lib/modules/${LINUX_VER}${LOCALVERSION}/build
 	rm linux-image-${LINUX_VER_MAJOR}-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/lib/modules/${LINUX_VER}${LOCALVERSION}/source
 	chmod 755 linux-image-${LINUX_VER_MAJOR}-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/DEBIAN
@@ -148,6 +149,6 @@ clean: check_version
 	-rm -fr linux-${LINUX_VER}*
 	-rm -fr u-boot-${UBOOT_VER}*
 	-rm -fr linux-image-${LINUX_VER_MAJOR}-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf*
-	-rm -fr mxs-dcp-longterm*
+	-rm -fr mxs-dcp-master*
 	-rm -fr *.imx
 	-rm -fr *.itb
