@@ -84,11 +84,11 @@ linux-${LINUX_VER}/arch/arm/boot/zImage: check_version linux-${LINUX_VER}.tar.xz
 	@if [ ! -d "linux-${LINUX_VER}" ]; then \
 		unxz --keep linux-${LINUX_VER}.tar.xz; \
 		gpg --verify linux-${LINUX_VER}.tar.sign; \
-		tar xf linux-${LINUX_VER}.tar && cd linux-${LINUX_VER}; \
+		tar xf linux-${LINUX_VER}.tar && cd linux-${LINUX_VER} && patch -p1 < ../linux-${LINUX_VER}-imx6ulz.patch; \
 	fi
 	cp usbarmory_linux-${LINUX_VER}.config linux-${LINUX_VER}/.config
 	sed -i -e 's|CONFIG_MODULE_SIG_KEY="certs/signing_key.pem"|CONFIG_MODULE_SIG_KEY="${KEYS_PATH}/usbarmory_chain.pem"|' linux-${LINUX_VER}/.config
-	wget ${USBARMORY_REPO}/software/kernel_conf/mark-two/${IMX}-usbarmory.dts -O linux-${LINUX_VER}/arch/arm/boot/dts/${IMX}-usbarmory.dts
+	cp ${IMX}-usbarmory.dts linux-${LINUX_VER}/arch/arm/boot/dts/${IMX}-usbarmory.dts
 	cd linux-${LINUX_VER} && \
 		KBUILD_BUILD_USER=${KBUILD_BUILD_USER} \
 		KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST} \
