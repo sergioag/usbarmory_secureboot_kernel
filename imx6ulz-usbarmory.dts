@@ -125,14 +125,6 @@
 &cpu0 {
 	/delete-property/ operating-points;
 	operating-points-v2 = <&cpu0_opp_table>;
-	fsl,soc-operating-points = <
-		/* KHz	uV */
-		900000	1250000
-		792000	1175000
-		528000	1175000
-		396000	1175000
-		198000	1175000
-	>;
 };
 
 &uart1 {
