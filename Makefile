@@ -1,6 +1,6 @@
 
 JOBS=2
-LINUX_VER=5.6.10
+LINUX_VER=5.6.15
 LINUX_VER_MAJOR=${shell echo ${LINUX_VER} | cut -d '.' -f1,2}
 KBUILD_BUILD_USER=usbarmory
 KBUILD_BUILD_HOST=f-secure-foundry
