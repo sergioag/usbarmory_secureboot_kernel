@@ -84,7 +84,7 @@ linux-${LINUX_VER}/arch/arm/boot/zImage: check_version linux-${LINUX_VER}.tar.xz
 		gpg --verify linux-${LINUX_VER}.tar.sign; \
 		tar xf linux-${LINUX_VER}.tar && cd linux-${LINUX_VER}; \
 	fi
-	cp usbarmory_linux-${LINUX_VER}.config linux-${LINUX_VER}/.config
+	cp usbarmory_linux-${LINUX_VER_MAJOR}.config linux-${LINUX_VER}/.config
 	sed -i -e 's|CONFIG_MODULE_SIG_KEY="certs/signing_key.pem"|CONFIG_MODULE_SIG_KEY="${KEYS_PATH}/usbarmory_chain.pem"|' linux-${LINUX_VER}/.config
 	cp ${IMX}-usbarmory.dts linux-${LINUX_VER}/arch/arm/boot/dts/${IMX}-usbarmory.dts
 	cd linux-${LINUX_VER} && \
