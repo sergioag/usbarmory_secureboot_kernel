@@ -150,3 +150,4 @@ clean: check_version
 	-rm -fr mxs-dcp-master*
 	-rm -fr *.imx
 	-rm -fr *.itb
+	-rm -fr csf.bin u-boot-tools
