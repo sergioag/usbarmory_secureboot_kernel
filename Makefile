@@ -1,11 +1,11 @@
 
 JOBS=2
-LINUX_VER=5.7.6
+LINUX_VER=5.17
 LINUX_VER_MAJOR=${shell echo ${LINUX_VER} | cut -d '.' -f1,2}
 KBUILD_BUILD_USER=usbarmory
 KBUILD_BUILD_HOST=f-secure-foundry
 LOCALVERSION=-0
-UBOOT_VER=2020.04
+UBOOT_VER=2021.10
 
 USBARMORY_REPO=https://raw.githubusercontent.com/f-secure-foundry/usbarmory/master
 MXS_DCP_REPO=https://github.com/sergioag/mxs-dcp
@@ -27,8 +27,8 @@ check_version:
 	@echo "target: USB armory Trusted Boot, IMX=${IMX} BOOT=${BOOT}"
 
 u-boot-${UBOOT_VER}.tar.bz2:
-	wget ftp://ftp.denx.de/pub/u-boot/u-boot-${UBOOT_VER}.tar.bz2 -O u-boot-${UBOOT_VER}.tar.bz2
-	wget ftp://ftp.denx.de/pub/u-boot/u-boot-${UBOOT_VER}.tar.bz2.sig -O u-boot-${UBOOT_VER}.tar.bz2.sig
+	wget https://ftp.denx.de/pub/u-boot/u-boot-${UBOOT_VER}.tar.bz2 -O u-boot-${UBOOT_VER}.tar.bz2
+	wget https://ftp.denx.de/pub/u-boot/u-boot-${UBOOT_VER}.tar.bz2.sig -O u-boot-${UBOOT_VER}.tar.bz2.sig
 
 linux-${LINUX_VER}.tar.xz:
 	wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${LINUX_VER}.tar.xz -O linux-${LINUX_VER}.tar.xz
@@ -109,7 +109,7 @@ u-boot-signed.imx: u-boot-tools usbarmory.itb
 
 usbarmory.itb: u-boot-tools linux-${LINUX_VER}/arch/arm/boot/zImage
 	cd u-boot-${UBOOT_VER} && tools/mkimage -D "-I dts -O dtb -p 2000 -i ../linux-${LINUX_VER}" -f ${USBARMORY_GIT}/software/secure_boot/mark-two/usbarmory.its ../usbarmory.itb
-	cd u-boot-${UBOOT_VER} && tools/mkimage -D "-I dts -O dtb -p 2000" -F -k ${KEYS_PATH} -K arch/arm/dts/imx6ull-usbarmory.dtb -r ../usbarmory.itb
+	cd u-boot-${UBOOT_VER} && tools/mkimage -D "-I dts -O dtb -p 2000" -F -k ${KEYS_PATH} -K arch/arm/dts/${IMX}-usbarmory.dtb -r ../usbarmory.itb
 
 linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf.deb: check_version usbarmory.itb mxs-dcp caam-keyblob
 	mkdir -p linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/DEBIAN
@@ -135,8 +135,8 @@ linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf.deb: check_vers
 	cd linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/boot ; ln -sf usbarmory-${LINUX_VER}${LOCALVERSION}.itb usbarmory.itb
 	cd linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/boot ; ln -sf ${IMX}-usbarmory-default-${LINUX_VER}${LOCALVERSION}.dtb ${IMX}-usbarmory.dtb
 	cd linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/boot ; ln -sf ${IMX}-usbarmory.dtb imx6ull-usbarmory.dtb
-	rm linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/lib/modules/${LINUX_VER}${LOCALVERSION}/build
-	rm linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/lib/modules/${LINUX_VER}${LOCALVERSION}/source
+	rm linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/lib/modules/${LINUX_VER}.0${LOCALVERSION}/build
+	rm linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/lib/modules/${LINUX_VER}.0${LOCALVERSION}/source
 	chmod 755 linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/DEBIAN
 	fakeroot dpkg-deb -b linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf.deb
 
