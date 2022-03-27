@@ -41,3 +41,8 @@ After the build finishes you will have a DEB package in this directory, named so
 dpkg --install linux-image-4.19-usbarmory-mark-two_5.4.25-0_armhf.deb
 ```
 And then reboot. If everything goes ok, it should boot properly.
+
+To install U-Boot, you can use something like:
+```
+sudo dd if=u-boot-signed.imx of=$TARGET_DEV bs=512 seek=2 conv=fsync
+```
