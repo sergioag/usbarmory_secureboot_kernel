@@ -8,7 +8,7 @@ LOCALVERSION=-0
 UBOOT_VER=2021.10
 
 USBARMORY_REPO=https://raw.githubusercontent.com/f-secure-foundry/usbarmory/master
-MXS_DCP_REPO=https://github.com/sergioag/mxs-dcp
+MXS_DCP_REPO=https://github.com/usbarmory/mxs-dcp
 CAAM_KEYBLOB_REPO=https://github.com/f-secure-foundry/caam-keyblob
 
 .DEFAULT_GOAL := all
