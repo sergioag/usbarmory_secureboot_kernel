@@ -1,4 +1,4 @@
-Package: linux-image-XXXX-usbarmory
+Package: linux-image-usbarmory
 Version: YYYY
 Maintainer: Andrej Rosano <andrej.rosano@f-secure.com>
 Architecture: armhf
