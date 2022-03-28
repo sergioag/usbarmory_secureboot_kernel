@@ -1,7 +1,8 @@
-From e9333fa552337d44ddd2ea669f236fd9c0ec73d0 Mon Sep 17 00:00:00 2001
+From a325c085feacb1468811dcc2a8a9d5b4fde8744d Mon Sep 17 00:00:00 2001
 From: Sergio Aguayo <sergioag@qmailhosting.net>
 Date: Mon, 28 Mar 2022 01:58:43 -0500
-Subject: [PATCH] Multiple fixes for 2021.10 in USBArmory MkII (Secure Boot)
+Subject: [PATCH 2/3] Multiple fixes for 2021.10 in USBArmory MkII (Secure
+ Boot)
 
 - Removed fdt_high, as it will cause FDT to be used in-place instead
   of relocated. This makes the system hang just after jumping to the
@@ -31,10 +32,10 @@ index e0628f23b9..eb10e71d5e 100644
  CONFIG_FIT=y
  CONFIG_FIT_SIGNATURE=y
 diff --git a/env/Kconfig b/env/Kconfig
-index c0dff1fd81..040fde57ac 100644
+index 06d72bad1d..1816963f75 100644
 --- a/env/Kconfig
 +++ b/env/Kconfig
-@@ -613,6 +613,8 @@ config SYS_RELOC_GD_ENV_ADDR
+@@ -614,6 +614,8 @@ config SYS_RELOC_GD_ENV_ADDR
  	  Relocate the early env_addr pointer so we know it is not inside
  	  the binary. Some systems need this and for the rest, it doesn't hurt.
  
@@ -43,7 +44,7 @@ index c0dff1fd81..040fde57ac 100644
  config SYS_MMC_ENV_DEV
  	int "mmc device number"
  	depends on ENV_IS_IN_MMC || ENV_IS_IN_FAT || SYS_LS_PPA_FW_IN_MMC || \
-@@ -621,6 +623,8 @@ config SYS_MMC_ENV_DEV
+@@ -622,6 +624,8 @@ config SYS_MMC_ENV_DEV
  	help
  	  MMC device number on the platform where the environment is stored.
  
