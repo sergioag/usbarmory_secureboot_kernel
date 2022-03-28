@@ -63,6 +63,7 @@ u-boot-tools: u-boot-${UBOOT_VER}.tar.bz2
 	cd u-boot-${UBOOT_VER} && \
 		wget ${USBARMORY_REPO}/software/u-boot/0001-ARM-mx6-add-support-for-USB-armory-Mk-II-board.patch && \
 		patch -p1 < 0001-ARM-mx6-add-support-for-USB-armory-Mk-II-board.patch && \
+		patch -p1 < ../0001-Multiple-fixes-for-2021.10-in-USBArmory-MkII-Secure-.patch && \
 		make usbarmory-mark-two_defconfig; \
 		sed -i -e 's/CONFIG_SYS_BOOT_MODE_NORMAL=y/# CONFIG_SYS_BOOT_MODE_NORMAL is not set/' .config; \
 		sed -i -e 's/# CONFIG_SYS_BOOT_MODE_VERIFIED_OPEN is not set/CONFIG_SYS_BOOT_MODE_VERIFIED_OPEN=y/' .config; \
