@@ -9,7 +9,7 @@ UBOOT_VER=2022.01
 
 USBARMORY_REPO=https://raw.githubusercontent.com/f-secure-foundry/usbarmory/master
 MXS_DCP_REPO=https://github.com/usbarmory/mxs-dcp
-CAAM_KEYBLOB_REPO=https://github.com/f-secure-foundry/caam-keyblob
+CAAM_KEYBLOB_REPO=https://github.com/usbarmory/caam-keyblob
 
 .DEFAULT_GOAL := all
 .PHONY: check_version mxs-dcp caam-keyblob all clean
