@@ -1,0 +1,16 @@
+csf.bin
+linux-*.tar
+linux-*.tar.sign
+linux-*.tar.xz
+linux-*
+*.deb
+linux-headers-usbarmory-mark-two_*
+linux-image-usbarmory-mark-two_*
+mxs-dcp-master.zip
+mxs-dcp-master/
+u-boot-*.tar.bz2
+u-boot-*.tar.bz2.sig
+u-boot-*
+u-boot-signed.imx
+u-boot-tools
+usbarmory.itb
