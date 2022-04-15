@@ -1,6 +1,6 @@
 
 JOBS=2
-LINUX_VER=5.17
+LINUX_VER=5.17.3
 LINUX_VER_MAJOR=${shell echo ${LINUX_VER} | cut -d '.' -f1,2}
 KBUILD_BUILD_USER=usbarmory
 KBUILD_BUILD_HOST=f-secure-foundry
@@ -92,7 +92,7 @@ linux-${LINUX_VER}/arch/arm/boot/zImage: check_version linux-${LINUX_VER}.tar.xz
 		KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST} \
 		LOCALVERSION=${LOCALVERSION} \
 		ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- \
-		make -j${JOBS} zImage modules ${IMX}-usbarmory.dtb
+		make -j${JOBS} olddefconfig zImage modules ${IMX}-usbarmory.dtb
 
 u-boot-signed.imx: u-boot-tools usbarmory.itb
 	cd u-boot-${UBOOT_VER} && make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
@@ -135,13 +135,27 @@ linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf.deb: check_vers
 	cd linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/boot ; ln -sf usbarmory-${LINUX_VER}${LOCALVERSION}.itb usbarmory.itb
 	cd linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/boot ; ln -sf ${IMX}-usbarmory-default-${LINUX_VER}${LOCALVERSION}.dtb ${IMX}-usbarmory.dtb
 	cd linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/boot ; ln -sf ${IMX}-usbarmory.dtb imx6ull-usbarmory.dtb
-	rm linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/lib/modules/${LINUX_VER}.0${LOCALVERSION}/build
-	rm linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/lib/modules/${LINUX_VER}.0${LOCALVERSION}/source
+	rm linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/lib/modules/${LINUX_VER}${LOCALVERSION}/build
+	rm linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/lib/modules/${LINUX_VER}${LOCALVERSION}/source
 	chmod 755 linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/DEBIAN
 	fakeroot dpkg-deb -b linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf.deb
 
+HEADER_DEPS := linux-${LINUX_VER}/arch/arm/boot/zImage
+linux-headers-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf.deb: $(HEADER_DEPS)
+	mkdir -p linux-headers-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/DEBIAN
+	mkdir -p linux-headers-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/boot
+	mkdir -p linux-headers-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/lib/modules/${LINUX_VER}${LOCALVERSION}/build
+	cd linux-headers-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/lib/modules/${LINUX_VER}${LOCALVERSION} ; ln -sf build source
+	cat control_template_linux-headers | \
+		sed -e 's/XXXX/${LINUX_VER_MAJOR}/'          | \
+		sed -e 's/YYYY/${LINUX_VER}${LOCALVERSION}/' | \
+		sed -e 's/ZZZZ/linux-image-usbarmory-mark-two (=${LINUX_VER}${LOCALVERSION})/' \
+		> linux-headers-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/DEBIAN/control
+	cd linux-${LINUX_VER} && make INSTALL_HDR_PATH=../linux-headers-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/lib/modules/${LINUX_VER}${LOCALVERSION}/build ARCH=arm headers_install
+	chmod 755 linux-headers-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf/DEBIAN
+	fakeroot dpkg-deb -b linux-headers-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf linux-headers-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf.deb
 
-all: check_version linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf.deb u-boot-signed.imx
+all: check_version linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf.deb linux-headers-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf.deb u-boot-signed.imx
 
 clean: check_version
 	-rm -fr linux-${LINUX_VER}*

@@ -1,4 +1,4 @@
-Package: linux-image-usbarmory
+Package: linux-image-usbarmory-mark-two
 Version: YYYY
 Maintainer: Andrej Rosano <andrej.rosano@f-secure.com>
 Architecture: armhf
