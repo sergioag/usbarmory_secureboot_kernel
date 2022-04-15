@@ -160,6 +160,7 @@ all: check_version linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_ar
 clean: check_version
 	-rm -fr linux-${LINUX_VER}*
 	-rm -fr u-boot-${UBOOT_VER}*
+	-rm -fr linux-headers-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf*
 	-rm -fr linux-image-usbarmory-mark-two_${LINUX_VER}${LOCALVERSION}_armhf*
 	-rm -fr mxs-dcp-master*
 	-rm -fr *.imx
